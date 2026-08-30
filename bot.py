@@ -3,7 +3,7 @@ from flask import Flask
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-TOKEN = os.getenv("BOT_TOKEN", "8816171451:AAFP7W0p2L5f8k3R2XvNqLm9oTjHs4uYdE1Q")
+TOKEN = "8816171451:AAF0747baP6QAEGYecRtWFw3OwjrJFaKi4Y"
 
 app = Flask(__name__)
 
@@ -12,15 +12,16 @@ def home():
     return "Bot is Live!"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("James Tips Bot LIVE! Send /tips")
+    await update.message.reply_text("🔥 James Tips Bot is LIVE! 🔥\n\nWelcome! Send /tips for today's tips.")
 
 async def tips(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Today Tips: Over 1.5 Goals! ✅")
+    await update.message.reply_text("⚽ Today's Tip: Over 1.5 Goals\n\n18+ Gamble responsibly. No guarantee.")
 
 def run_bot():
     application = ApplicationBuilder().token(TOKEN).build()
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("tips", tips))
+    print("Bot polling started...")
     application.run_polling()
 
 if __name__ == "__main__":
