@@ -1,45 +1,30 @@
+import os
 from flask import Flask
-import threading
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes, ConversationHandler
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-TOKEN = "8816171451:AAH4qPykEt-MSCUHQfJMwoqRKfq37-1kTg9s"
+TOKEN = os.getenv("BOT_TOKEN", "8816171451:AAFP7W0p2L5f8k3R2XvNqLm9oTjHs4uYdE1Q")
 
-NAME, GAME = range(2)
+app = Flask(__name__)
 
-# Keep-alive for Render
-app_web = Flask(__name__)
-@app_web.route('/')
-def home(): return "JAMES TIPS LIVE!"
-def run_web(): app_web.run(host='0.0.0.0', port=10000)
-threading.Thread(target=run_web, daemon=True).start()
+@app.route("/")
+def home():
+    return "Bot is Live!"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("WELCOME TO JAMES TIPS 🔥\n\nWhat is your name?")
-    return NAME
+    await update.message.reply_text("James Tips Bot LIVE! Send /tips")
 
-async def get_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    context.user_data['name'] = update.message.text
-    keyboard = [
-        [InlineKeyboardButton("3+ ODDS - 500 KES", callback_data='500')],
-        [InlineKeyboardButton("5+ ODDS - 1000 KES", callback_data='1000')],
-        [InlineKeyboardButton("💰 Check Balance", callback_data='balance')]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text(f"Nice! {update.message.text} Choose Package:", reply_markup=reply_markup)
-    return GAME
+async def tips(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Today Tips: Over 1.5 Goals! ✅")
 
-async def button_click(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
-    await query.answer()
-    if query.data == 'balance':
-        await query.edit_message_text("💰 Balance: 0 KES\n\nLIPA M-PESA: 0712 345 678\nTill: James Tips")
-    else:
-        await query.edit_message_text(f"LIPA M-PESA: 0712345678\n\nAmount: {query.data} KES\n\nSend screenshot after payment to @JamesTipsAdmin")
-    return ConversationHandler.END
+def run_bot():
+    application = ApplicationBuilder().token(TOKEN).build()
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("tips", tips))
+    application.run_polling()
 
-app = ApplicationBuilder().token(TOKEN).build()
-conv = ConversationHandler(entry_points=[CommandHandler('start', start)], states={NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_name)], GAME: [CallbackQueryHandler(button_click)]}, fallbacks=[])
-app.add_handler(conv)
-print("RUNNING")
-app.run_polling()
+if __name__ == "__main__":
+    import threading
+    threading.Thread(target=run_bot, daemon=True).start()
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
