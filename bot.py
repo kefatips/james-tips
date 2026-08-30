@@ -5,7 +5,7 @@ BOT_TOKEN = os.environ.get("BOT_TOKEN") or "8816171451:AAF0747baP6QAEGYecRtWFw3O
 bot = telebot.TeleBot(BOT_TOKEN)
 app = Flask(__name__)
 users = {}
-PHOTO = "welcome.jpg"
+PHOTO = "IMG-20260831-WA3113.jpg"
 
 pkgs = {
     "1": "3+ ODDS - 500 KES",
