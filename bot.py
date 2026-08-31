@@ -22,7 +22,7 @@ def home(): return "Ecco Live!"
 def start(m):
     cid=m.chat.id
     users[cid]={"step":"name","name":"","last":time.time(),"nags":0}
-    cap="🎮 WELCOME TO ECCO GAMES HUB 🎮\n\n👇 SEE MY WINNING TODAY 👇\n\nI sell 100% SURE betting tips daily! 💯\nNo lose, pure profit 🔥\n\n📲 Contact: @JamesTips\n💳 Till: 0738792626\n\nWhat's your name? 😊"
+    cap="🎮 WELCOME TO ECCO GAMES HUB 🎮\n\n👇 SEE MY WINNING TODAY 👇\n\nI sell 100% SURE betting tips daily! 💯\nNo lose, pure profit 🔥\n\n📲 Contact: @eccocashnobot\n💳 Till: 0738792626\n\nWhat's your name? 😊"
     try:
         if os.path.exists(PHOTO):
             bot.send_photo(cid, open(PHOTO,'rb'), caption=cap)
@@ -43,7 +43,7 @@ def h(m):
     elif s=="package":
         if t not in ["1","2","3","4","5"]: bot.send_message(cid,"Type 1-5 bro"); return
         users[cid]["package"]=t; users[cid]["step"]="paid"
-        bot.send_message(cid, f"Perfect choice {name}! ✅\n\nYou selected: {pkgs[t]}\n\n💳 LIPA NA M-PESA:\nSend to: 0738792626\n📲 @JamesTips\n\nAfter paying, type PAID + CODE\nEx: PAID QGHI2345")
+        bot.send_message(cid, f"Perfect choice {name}! ✅\n\nYou selected: {pkgs[t]}\n\n💳 LIPA NA M-PESA:\nSend to: 0738792626\n📲 @eccocashnobot\n\nAfter paying, type PAID + CODE\nEx: PAID QGHI2345")
     elif s=="paid":
         if "PAID" in t.upper():
             users[cid]["step"]="verify"
