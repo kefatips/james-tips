@@ -55,10 +55,12 @@ function updateCurrency() {{
 """
 
 @app.route("/")
+@app.route("/api")
 def home():
     return render_template_string(FORM_HTML)
 
 @app.route("/apply", methods=["POST"])
+@app.route("/api/apply", methods=["POST"])
 def apply():
     name = request.form.get("name", "").strip()
     phone = request.form.get("phone", "").strip()
@@ -73,7 +75,6 @@ def apply():
         writer = csv.writer(f)
         writer.writerow([datetime.now().isoformat(), name, phone, email, country, amount])
 
-    # This is the part that sends to YOUR Telegram
     currency = "ZMW" if country == "Zambia" else "USD" if country == "Zimbabwe" else "TSh"
     msg = f"New Zorak Loan Lead\n\nName: {name}\nPhone: {phone}\nEmail: {email}\nCountry: {country}\nAmount: {amount} {currency}"
     send_to_telegram(msg)
