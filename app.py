@@ -36,6 +36,44 @@ def style():
     s = s + 'box-shadow:0 4px 20px #0001}'
     s = s + 'h1{margin:0 0 6px;font-size:26px}'
     s = s + 'p{margin:10px 0}'
+    s = s + 'input,select{width:100%;padding flask import Flask, request
+import csv, os, requests
+from datetime import datetime
+app = Flask(__name__)
+NL = chr(10)
+WA = 'https://wa.me/message/'
+WA = WA + 'CFCJWLOZ7IWZK1'
+BOT = os.environ.get('BOT_TOKEN')
+CHAT = os.environ.get('CHAT_ID')
+def send_t(t):
+    if not BOT:
+        return False
+    if not CHAT:
+        return False
+    try:
+        u = 'https://api.telegram.org/bot'
+        u = u + BOT + '/sendMessage'
+        d = {'chat_id': CHAT, 'text': t}
+        r = requests.post(u, json=d, timeout=10)
+        return r.status_code == 200
+    except:
+        return False
+def style():
+    s = ''
+    s = s + '<style>'
+    s = s + 'body{margin:0;font-family:Arial;'
+    s = s + 'background:#f2f7f2;color:#111}'
+    s = s + '.top{background:#0a5c36;color:#fff;'
+    s = s + 'padding:18px;text-align:center}'
+    s = s + '.top b{font-size:24px}'
+    s = s + '.top span{color:#ffc107}'
+    s = s + '.wrap{max-width:520px;margin:16px auto;'
+    s = s + 'padding:0 14px}'
+    s = s + '.card{background:#fff;'
+    s = s + 'border-radius:16px;padding:20px;'
+    s = s + 'box-shadow:0 4px 20px #0001}'
+    s = s + 'h1{margin:0 0 6px;font-size:26px}'
+    s = s + 'p{margin:10px 0}'
     s = s + 'input,select{width:100%;padding:12px;'
     s = s + 'border:1px solid #ddd;'
     s = s + 'border-radius:10px;'
