@@ -2,33 +2,101 @@ from flask import Flask, request
 import csv, os, requests
 from datetime import datetime
 app = Flask(__name__)
-WHATSAPP_LINK = 'https://wa.me/message/CFCJWLOZ7IWZK1'
-BOT_TOKEN = os.environ.get('BOT_TOKEN')
-CHAT_ID = os.environ.get('CHAT_ID')
-def send_to_telegram(text):
+NL = chr(10)
+WHATSAPP_LINK = "https://wa.me/message/CFCJWLOZ7IWZK1"
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+CHAT_ID = os.environ.get("CHAT_ID")
+def send_telegram(text):
     if not BOT_TOKEN or not CHAT_ID:
         return False
     try:
-        r = requests.post('https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage', json={'chat_id': CHAT_ID, 'text': text}, timeout=10)
+        u = "https://api.telegram.org/bot"
+        u = u + BOT_TOKEN + "/sendMessage"
+        r = requests.post(u, json={"chat_id": CHAT_ID, "text": text}, timeout=10)
         return r.status_code == 200
     except Exception as e:
         print(e)
         return False
-HOME_HTML = '''
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Zorak Loans</title>
-<style>
-* { box-sizing: border-box; font-family: Arial, sans-serif; }
-body { margin: 0; background: #eef1f5; padding: 15px; }
-.top { text-align: center; color: #0f7a55; font-size: 26px; font-weight: 900; padding: 10px 0 15px; }
-.top span { color: #111; }
-.card { max-width: 420px; margin: 0 auto; background: white; border-radius: 20px; padding: 22px 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-.card h2 { text-align: center; margin: 0; font-size: 20px; }
-.sub { text-align: center; font-size: 12px; color: #888; margin: 8px 0 20px; }
-.calc { background: #f8f9fb; border-radius: 16px; padding: 16px; }
-.row { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 14px; margin-top: 12px; }
-.row b { color: #2563eb; }
-input[type=range] { width: 100%; margin: 12px 0 4px; accent-color: #256
+@app.route("/")
+def home():
+    h = "<h1>Zorak Loans</h1>"
+    h = h + "<p>Fast loans in Zambia, Zimbabwe, Tanzania</p>"
+    h = h + "<p>From 8 percent, approved in 24 hours</p>"
+    h = h + "<p>Calculator: pick amount and term on Apply page</p>"
+    h = h + "<a href='/apply-form'>APPLY NOW</a><br><br>"
+    h = h + "<a href='" + WHATSAPP_LINK + "'>Chat on WhatsApp</a>"
+    h = h + "<p>We never ask for PIN or OTP.</p>"
+    return h
+@app.route("/apply-form")
+def form():
+    h = "<h2>Apply Now</h2>"
+    h = h + "<form method='POST' action='/apply'>"
+    h = h + "Name<br><input name='name' required><br><br>"
+    h = h + "Phone<br><input name='phone' required><br><br>"
+    h = h + "Email<br><input name='email'><br><br>"
+    h = h + "Country<br><select name='country' required>"
+    h = h + "<option value=''>Select</option>"
+    h = h + "<option>Zambia</option>"
+    h = h + "<option>Zimbabwe</option>"
+    h = h + "<option>Tanzania</option></select><br><br>"
+    h = h + "Amount<br><input name='amount' required><br><br>"
+    h = h + "Term months<br><input name='term' value='12'><br><br>"
+    h = h + "Purpose of Loan<br><select name='purpose' required>"
+    h = h + "<option value=''>Select Purpose</option>"
+    h = h + "<option>Business</option>"
+    h = h + "<option>School Fees</option>"
+    h = h + "<option>Medical</option>"
+    h = h + "<option>Rent</option>"
+    h = h + "<option>Agriculture</option>"
+    h = h + "<option>Car</option>"
+    h = h + "<option>Personal</option>"
+    h = h + "<option>Other</option></select><br><br>"
+    h = h + "<button>SUBMIT</button></form>"
+    return h
+@app.route("/apply", methods=["POST"])
+def apply():
+    name = request.form.get("name", "").strip()
+    phone = request.form.get("phone", "").strip()
+    email = request.form.get("email", "").strip()
+    country = request.form.get("country", "").strip()
+    amount = request.form.get("amount", "").strip()
+    term = request.form.get("term", "").strip()
+    purpose = request.form.get("purpose", "").strip()
+    if not name or not phone or not country or not amount:
+        return "Fill all fields <a href='/apply-form'>Back</a>", 400
+    with open("leads.csv", "a", newline="") as f:
+        w = csv.writer(f)
+        w.writerow([datetime.now().isoformat(), name, phone, email, country, amount, term, purpose])
+    cur = "ZMW"
+    if country == "Zimbabwe":
+        cur = "USD"
+    if country == "Tanzania":
+        cur = "TSh"
+    msg = "New Zorak Loan Lead"
+    msg = msg + NL + NL + "Name: " + name
+    msg = msg + NL + "Phone: " + phone
+    msg = msg + NL + "Email: " + email
+    msg = msg + NL + "Country: " + country
+    msg = msg + NL + "Amount: " + amount + " " + cur
+    msg = msg + NL + "Term: " + term + " months"
+    msg = msg + NL + "Purpose: " + purpose
+    send_telegram(msg)
+    t = "<h2>Thank you, " + name + "!</h2>"
+    t = t + "<p>Amount: " + amount + " " + cur + "</p>"
+    t = t + "<p>Purpose: " + purpose + "</p>"
+    t = t + "<p>We will call you on " + phone + "</p>"
+    return t
+@app.route("/test-telegram")
+def test():
+    if not BOT_TOKEN:
+        return "BOT_TOKEN MISSING"
+    if not CHAT_ID:
+        return "CHAT_ID MISSING"
+    u = "https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage"
+    r = requests.post(u, json={"chat_id": CHAT_ID, "text": "Test OK"}, timeout=10)
+    return "Status: " + str(r.status_code)
+@app.route("/health")
+def health():
+    return "OK"
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
