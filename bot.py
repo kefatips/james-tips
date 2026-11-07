@@ -22,26 +22,68 @@ def send_to_telegram(text):
         print("Telegram error:", e)
 
 FORM_HTML = f"""
-<h2>Zorak Loan Application</h2>
-<p>Fill this form and we will call you back. We will never ask for your PIN or OTP.</p>
-<form method="POST" action="/apply">
-  Full Name: <br><input name="name" required><br><br>
-  Phone: <br><input name="phone" placeholder="+260 / +263 / +255" required><br><br>
-  Email: <br><input name="email" type="email"><br><br>
-  Country: <br>
-  <select name="country" id="country" onchange="updateCurrency()" required>
-    <option value="">Select Country</option>
-    <option value="Zambia">Zambia</option>
-    <option value="Zimbabwe">Zimbabwe</option>
-    <option value="Tanzania">Tanzania</option>
-  </select><br><br>
-  Loan Amount <span id="currencyLabel">(Select country first)</span>: <br>
-  <input name="amount" type="number" required><br><br>
-  <label><input type="checkbox" required> I agree to be contacted about my application.</label><br><br>
-  <button type="submit">Submit Application</button>
-</form>
-<br>
-<a href="{WHATSAPP_LINK}" target="_blank"><button>Chat on WhatsApp Instead</button></a>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {{ box-sizing: border-box; font-family: Arial, sans-serif; }}
+body {{ margin: 0; background: #f0f2f5; padding: 15px; }}
+.card {{ max-width: 420px; margin: 0 auto; background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }}
+.header {{ background: linear-gradient(135deg, #0f7a55, #12b981); color: white; padding: 25px 20px; text-align: center; }}
+.header h1 {{ margin: 0; font-size: 24px; }}
+.header p {{ margin: 8px 0 0; font-size: 14px; opacity: 0.9; }}
+.form {{ padding: 20px; }}
+label {{ font-size: 13px; font-weight: bold; color: #333; display: block; margin-bottom: 6px; margin-top: 15px; }}
+input, select {{ width: 100%; padding: 13px; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; outline: none; background: #fafafa; }}
+input:focus, select:focus {{ border-color: #12b981; background: white; }}
+.check {{ display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: #555; margin-top: 18px; }}
+.check input {{ width: auto; margin-top: 2px; }}
+.btn {{ width: 100%; background: #0f7a55; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: bold; margin-top: 20px; cursor: pointer; }}
+.btn:active {{ background: #0a5c40; }}
+.wa {{ display: block; text-align: center; background: #25D366; color: white; text-decoration: none; padding: 13px; border-radius: 12px; font-weight: bold; margin-top: 12px; font-size: 15px; }}
+.safe {{ text-align: center; font-size: 12px; color: #888; margin-top: 15px; }}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <h1>Zorak Loans</h1>
+    <p>Fast, Easy & Trusted Loan Application</p>
+  </div>
+  <div class="form">
+    <form method="POST" action="/apply">
+      <label>Full Name</label>
+      <input name="name" placeholder="e.g. Elkana Ngetich" required>
+
+      <label>Phone Number</label>
+      <input name="phone" placeholder="+254 / +260 / +263 / +255" required>
+
+      <label>Email (Optional)</label>
+      <input name="email" type="email" placeholder="you@gmail.com">
+
+      <label>Country</label>
+      <select name="country" id="country" onchange="updateCurrency()" required>
+        <option value="">Select Country</option>
+        <option value="Zambia">Zambia</option>
+        <option value="Zimbabwe">Zimbabwe</option>
+        <option value="Tanzania">Tanzania</option>
+      </select>
+
+      <label>Loan Amount <span id="currencyLabel" style="color:#0f7a55;"></span></label>
+      <input name="amount" type="number" placeholder="Enter amount" required>
+
+      <div class="check">
+        <input type="checkbox" required>
+        <span>I agree to be contacted about my application.</span>
+      </div>
+
+      <button class="btn" type="submit">Submit Application</button>
+    </form>
+    <a class="wa" href="{WHATSAPP_LINK}" target="_blank">Chat on WhatsApp Instead</a>
+    <div class="safe">We will never ask for your PIN or OTP.</div>
+  </div>
+</div>
 <script>
 function updateCurrency() {{
   var c = document.getElementById("country").value;
@@ -49,9 +91,11 @@ function updateCurrency() {{
   if (c == "Zambia") label.innerText = "(Kwacha - ZMW)";
   else if (c == "Zimbabwe") label.innerText = "(USD - $)";
   else if (c == "Tanzania") label.innerText = "(Shilling - TSh)";
-  else label.innerText = "(Select country first)";
+  else label.innerText = "";
 }}
 </script>
+</body>
+</html>
 """
 
 @app.route("/")
@@ -76,15 +120,17 @@ def apply():
         writer.writerow([datetime.now().isoformat(), name, phone, email, country, amount])
 
     currency = "ZMW" if country == "Zambia" else "USD" if country == "Zimbabwe" else "TSh"
-    msg = f"New Zorak Loan Lead\n\nName: {name}\nPhone: {phone}\nEmail: {email}\nCountry: {country}\nAmount: {amount} {currency}"
+    msg = f"New Zorak Loan Lead\\n\\nName: {name}\\nPhone: {phone}\\nEmail: {email}\\nCountry: {country}\\nAmount: {amount} {currency}"
     send_to_telegram(msg)
 
     return f"""
-    <h2>Thank you, {name}!</h2>
-    <p>Your application for {amount} {currency} was received.</p>
-    <p>We will call you on {phone} to continue. Please do not share your PIN or OTP with anyone.</p>
-    <p><a href="{WHATSAPP_LINK}">Click here to chat to us on WhatsApp</a></p>
-    <a href="/">Back to form</a>
+    <div style="max-width:420px;margin:40px auto;font-family:Arial;text-align:center;padding:20px;">
+      <h2 style="color:#0f7a55;">Thank you, {name}!</h2>
+      <p>Your application for {amount} {currency} was received.</p>
+      <p>We will call you on {phone} to continue.</p>
+      <a href="{WHATSAPP_LINK}" style="display:block;background:#25D366;color:white;padding:14px;border-radius:12px;text-decoration:none;font-weight:bold;">Chat on WhatsApp</a>
+      <br><a href="/">Back to form</a>
+    </div>
     """
 
 if __name__ == "__main__":
