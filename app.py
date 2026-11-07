@@ -53,10 +53,101 @@ def home():
     h = h + "select{width:100%;padding:12px;"
     h = h + "border-radius:10px;border:1px solid #ddd}"
     h = h + "input{width:100%}"
+    h = h + "p{margin:8px 0}"
     h = h + "</style></head><body>"
     h = h + "<div class='top'>Zorak Loans</div>"
     h = h + "<div class='card'>"
     h = h + "<h2>Get Your Loan Approved Fast</h2>"
     h = h + "<p>Quick approval - Low rates</p>"
     h = h + "<div class='calc'>"
-    h = h + "<b>Loan Calculator</b><br>
+    h = h + "<p><b>Loan Calculator</b></p>"
+    h = h + "<p>Country</p>"
+    h = h + "<select id='country'"
+    h = h + " onchange='updateAll()'>"
+    h = h + "<option>Zimbabwe</option>"
+    h = h + "<option>Zambia</option>"
+    h = h + "<option>Tanzania</option>"
+    h = h + "</select>"
+    h = h + "<p>Amount: <b id='amtLabel'>$5,000</b></p>"
+    h = h + "<input type='range' id='amount'"
+    h = h + " min='100' max='5000'"
+    h = h + " value='5000'"
+    h = h + " oninput='updateAll()'>"
+    h = h + "<p>Term: <b id='termLabel'>12 months</b></p>"
+    h = h + "<input type='range' id='term'"
+    h = h + " min='6' max='60' value='12'"
+    h = h + " oninput='updateAll()'>"
+    h = h + "<div class='monthly'>"
+    h = h + "<small>Monthly Payment</small>"
+    h = h + "<div id='monthly'>$434.94</div>"
+    h = h + "</div></div>"
+    h = h + "<p><a class='btn' href='/apply-form'"
+    h = h + " id='applyBtn'>APPLY NOW</a></p>"
+    h = h + "<p><a class='wa2' href='" + WA + "'>"
+    h = h + "Chat on WhatsApp</a></p>"
+    h = h + "<p>We never ask for PIN or OTP.</p>"
+    h = h + "</div>"
+    h = h + "<script>function updateAll(){"
+    h = h + "var c=document.getElementById('country').value;"
+    h = h + "var sym='$';"
+    h = h + "if(c=='Zambia')sym='K';"
+    h = h + "if(c=='Tanzania')sym='TSh ';"
+    h = h + "var amt=document.getElementById('amount').value;"
+    h = h + "amt=parseInt(amt);"
+    h = h + "var term=document.getElementById('term').value;"
+    h = h + "term=parseInt(term);"
+    h = h + "document.getElementById('amtLabel').innerText="
+    h = h + "sym+amt.toLocaleString();"
+    h = h + "document.getElementById('termLabel').innerText="
+    h = h + "term+' months';"
+    h = h + "var r=0.08/12;"
+    h = h + "var m=amt*r/(1-Math.pow(1+r,-term));"
+    h = h + "document.getElementById('monthly').innerText="
+    h = h + "sym+m.toFixed(2);"
+    h = h + "document.getElementById('applyBtn').href="
+    h = h + "'/apply-form?amount='+amt+'&country='+c+'&term='+term;"
+    h = h + "}updateAll();</script></body></html>"
+    return h
+@app.route("/apply-form")
+@app.route("/api/apply-form")
+def form():
+    h = "<h2>Apply Now</h2>"
+    h = h + "<form method='POST' action='/apply'>"
+    h = h + "<p>Name</p><input name='name' required>"
+    h = h + "<p>Phone</p><input name='phone' required>"
+    h = h + "<p>Email</p><input name='email'>"
+    h = h + "<p>Country</p><select name='country' required>"
+    h = h + "<option value=''>Select</option>"
+    h = h + "<option>Zambia</option>"
+    h = h + "<option>Zimbabwe</option>"
+    h = h + "<option>Tanzania</option></select>"
+    h = h + "<p>Amount</p><input name='amount' required>"
+    h = h + "<p>Term</p><input name='term' value='12'>"
+    h = h + "<p>Purpose</p><select name='purpose' required>"
+    h = h + "<option value=''>Select Purpose</option>"
+    h = h + "<option>Business</option>"
+    h = h + "<option>School Fees</option>"
+    h = h + "<option>Medical</option>"
+    h = h + "<option>Rent</option>"
+    h = h + "<option>Agriculture</option>"
+    h = h + "<option>Car</option>"
+    h = h + "<option>Personal</option>"
+    h = h + "<option>Other</option></select>"
+    h = h + "<p><button>SUBMIT</button></p></form>"
+    h = h + "<p><a href='" + WA + "'>WhatsApp</a></p>"
+    return h
+@app.route("/apply", methods=["POST"])
+@app.route("/api/apply", methods=["POST"])
+def apply():
+    name = request.form.get("name", "").strip()
+    phone = request.form.get("phone", "").strip()
+    email = request.form.get("email", "").strip()
+    country = request.form.get("country", "").strip()
+    amount = request.form.get("amount", "").strip()
+    term = request.form.get("term", "").strip()
+    purpose = request.form.get("purpose", "").strip()
+    if not name or not phone or not country or not amount:
+        return "Fill all fields", 400
+    with open("leads.csv", "a", newline="") as f:
+        w = csv.writer(f)
+        w.writerow([datetime.now().isoformat(), name, phone, email
