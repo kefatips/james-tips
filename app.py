@@ -2,153 +2,51 @@ from flask import Flask, request
 import csv, os, requests
 from datetime import datetime
 app = Flask(__name__)
-NL = chr(10)
-WA = 'https://wa.me/message/'
-WA = WA + 'CFCJWLOZ7IWZK1'
-BOT = os.environ.get('BOT_TOKEN')
-CHAT = os.environ.get('CHAT_ID')
-def send_t(t):
-    if not BOT:
-        return False
-    if not CHAT:
-        return False
+N = chr(10)
+W = 'https://wa.me/message/CFCJWLOZ7IWZK1'
+B = os.environ.get('BOT_TOKEN')
+C = os.environ.get('CHAT_ID')
+H = '<style>body{margin:0;background:#f2f7f2;font-family:Arial}.top{background:#0a5c36;color:#fff;padding:18px;text-align:center}.wrap{max-width:520px;margin:16px auto;padding:0 14px}.card{background:#fff;border-radius:16px;padding:20px}.btn{background:#0a5c36;color:#fff;padding:14px;border-radius:12px;display:block;text-align:center;text-decoration:none}.btn2{background:#ffc107;color:#111}.big{font-size:28px;color:#0a5c36}.muted{color:#666}</style><div class=top><b>ZORAK LOANS</b><div>Zambia | Zimbabwe | Tanzania | Ghana</div></div>'
+def send(t):
     try:
-        u = 'https://api.telegram.org/bot'
-        u = u + BOT + '/sendMessage'
-        d = {'chat_id': CHAT, 'text': t}
-        r = requests.post(u, json=d, timeout=10)
-        return r.status_code == 200
+        u = 'https://api.telegram.org/bot' + B + '/sendMessage'
+        requests.post(u, json={'chat_id': C, 'text': t}, timeout=10)
     except:
-        return False
-def style():
-    s = ''
-    s = s + '<style>'
-    s = s + 'body{margin:0;font-family:Arial;'
-    s = s + 'background:#f2f7f2;color:#111}'
-    s = s + '.top{background:#0a5c36;color:#fff;'
-    s = s + 'padding:18px;text-align:center}'
-    s = s + '.top b{font-size:24px}'
-    s = s + '.top span{color:#ffc107}'
-    s = s + '.wrap{max-width:520px;margin:16px auto;'
-    s = s + 'padding:0 14px}'
-    s = s + '.card{background:#fff;'
-    s = s + 'border-radius:16px;padding:20px;'
-    s = s + 'box-shadow:0 4px 20px #0001}'
-    s = s + 'h1{margin:0 0 6px;font-size:26px}'
-    s = s + 'p{margin:10px 0}'
-    s = s + 'input,select{width:100%;padding flask import Flask, request
-import csv, os, requests
-from datetime import datetime
-app = Flask(__name__)
-NL = chr(10)
-WA = 'https://wa.me/message/'
-WA = WA + 'CFCJWLOZ7IWZK1'
-BOT = os.environ.get('BOT_TOKEN')
-CHAT = os.environ.get('CHAT_ID')
-def send_t(t):
-    if not BOT:
-        return False
-    if not CHAT:
-        return False
-    try:
-        u = 'https://api.telegram.org/bot'
-        u = u + BOT + '/sendMessage'
-        d = {'chat_id': CHAT, 'text': t}
-        r = requests.post(u, json=d, timeout=10)
-        return r.status_code == 200
-    except:
-        return False
-def style():
-    s = ''
-    s = s + '<style>'
-    s = s + 'body{margin:0;font-family:Arial;'
-    s = s + 'background:#f2f7f2;color:#111}'
-    s = s + '.top{background:#0a5c36;color:#fff;'
-    s = s + 'padding:18px;text-align:center}'
-    s = s + '.top b{font-size:24px}'
-    s = s + '.top span{color:#ffc107}'
-    s = s + '.wrap{max-width:520px;margin:16px auto;'
-    s = s + 'padding:0 14px}'
-    s = s + '.card{background:#fff;'
-    s = s + 'border-radius:16px;padding:20px;'
-    s = s + 'box-shadow:0 4px 20px #0001}'
-    s = s + 'h1{margin:0 0 6px;font-size:26px}'
-    s = s + 'p{margin:10px 0}'
-    s = s + 'input,select{width:100%;padding:12px;'
-    s = s + 'border:1px solid #ddd;'
-    s = s + 'border-radius:10px;'
-    s = s + 'box-sizing:border-box;font-size:16px}'
-    s = s + '.btn{display:block;text-align:center;'
-    s = s + 'background:#0a5c36;color:#fff;'
-    s = s + 'padding:14px;border-radius:12px;'
-    s = s + 'text-decoration:none;font-weight:bold;'
-    s = s + 'border:0;width:100%;font-size:17px;'
-    s = s + 'cursor:pointer}'
-    s = s + '.btn2{background:#ffc107;color:#111}'
-    s = s + '.row{display:flex;gap:10px}'
-    s = s + '.row div{flex:1}'
-    s = s + '.pill{display:inline-block;'
-    s = s + 'background:#e8f5ee;padding:6px 10px;'
-    s = s + 'border-radius:20px;font-size:13px;'
-    s = s + 'margin:2px}'
-    s = s + '.big{font-size:28px;font-weight:bold;'
-    s = s + 'color:#0a5c36}'
-    s = s + '.muted{color:#666;font-size:14px}'
-    s = s + '</style>'
-    return s
-def top():
-    t = ''
-    t = t + '<div class=top>'
-    t = t + '<b>ZORAK <span>LOANS</span></b>'
-    t = t + '<div>Fast Loans - Zambia | Zimbabwe'
-    t = t + ' | Tanzania | Ghana</div>'
-    t = t + '</div>'
-    return t
+        pass
 @app.route('/')
 @app.route('/api')
 def home():
-    t = ''
-    t = t + style()
-    t = t + top()
-    t = t + '<div class=wrap>'
-    t = t + '<div class=card>'
-    t = t + '<h1>Need cash today?</h1>'
-    t = t + '<p class=muted>Apply in 2 mins.'
-    t = t + ' Get answer on WhatsApp.</p>'
-    t = t + '<span class=pill>No paperwork</span>'
-    t = t + '<span class=pill>Same day</span>'
-    t = t + '<span class=pill>Safe</span>'
-    t = t + '<p>Country</p>'
-    t = t + '<select id=c>'
-    t = t + '<option>Zambia</option>'
-    t = t + '<option>Zimbabwe</option>'
-    t = t + '<option>Tanzania</option>'
-    t = t + '<option>Ghana</option>'
-    t = t + '</select>'
-    t = t + '<div class=row>'
-    t = t + '<div>'
-    t = t + '<p>Amount</p>'
-    t = t + '<input id=a value=5000>'
-    t = t + '</div>'
-    t = t + '<div>'
-    t = t + '<p>Term (months)</p>'
-    t = t + '<input id=n value=12>'
-    t = t + '</div>'
-    t = t + '</div>'
-    t = t + '<p>Your Monthly Payment</p>'
-    t = t + '<div class=big id=m></div>'
-    t = t + '<p class=muted>8% interest.'
-    t = t + ' Example only.</p>'
-    t = t + '<button class=btn onclick=calc()>'
-    t = t + 'Calculate</button>'
-    t = t + '<br>'
-    t = t + '<a class="btn btn2" href=/apply-form>'
-    t = t + 'APPLY NOW</a>'
-    t = t + '<br>'
-    t = t + '<a class=btn href=' + WA + '>'
-    t = t + 'Chat on WhatsApp</a>'
-    t = t + '</div>'
-    t = t + '<br>'
-    t = t + '<div class=card>'
-    t = t + '<h3>How it works</h3>'
-    t = t + '<p>1. Fill form - 2 mins</p>'
+    return H + '<div class=wrap><div class=card><h1>Need cash today?</h1><p>Country</p><select id=c><option>Zambia</option><option>Zimbabwe</option><option>Tanzania</option><option>Ghana</option></select><p>Amount</p><input id=a value=5000><p>Term</p><input id=n value=12><p>Monthly Payment</p><div class=big id=m></div><button class=btn onclick=calc()>Calculate</button><br><a class="btn btn2" href=/apply-form>APPLY NOW</a><br><a class=btn href=' + W + '>WhatsApp</a></div></div><script>function calc(){var a=document.getElementById("a").value;var n=document.getElementById("n").value;var r=0.08/12;var m=a*r/(1-Math.pow(1+r,-n));document.getElementById("m").innerText=m.toFixed(2)}calc()</script>'
+@app.route('/apply-form')
+@app.route('/api/apply-form')
+def form():
+    return H + '<div class=wrap><div class=card><h1>Apply Now</h1><form method=POST action=/apply><p>Name</p><input name=name required><p>Phone</p><input name=phone required><p>Country</p><select name=country><option>Zambia</option><option>Zimbabwe</option><option>Tanzania</option><option>Ghana</option></select><p>Amount</p><input name=amount required value=5000><p>Term</p><input name=term value=12><p>Purpose</p><select name=purpose><option>Business</option><option>School Fees</option><option>Medical</option><option>Rent</option><option>Other</option></select><br><br><button class=btn>SUBMIT</button></form></div></div>'
+@app.route('/apply', methods=['POST'])
+@app.route('/api/apply', methods=['POST'])
+def apply():
+    n = request.form.get('name', '')
+    p = request.form.get('phone', '')
+    c = request.form.get('country', '')
+    a = request.form.get('amount', '')
+    t = request.form.get('term', '')
+    u = request.form.get('purpose', '')
+    with open('leads.csv', 'a', newline='') as f:
+        csv.writer(f).writerow([datetime.now().isoformat(), n, p, c, a, t, u])
+    cur = 'ZMW'
+    if c == 'Zimbabwe':
+        cur = 'USD'
+    if c == 'Tanzania':
+        cur = 'TSh'
+    if c == 'Ghana':
+        cur = 'GHS'
+    send('New Lead' + N + 'Name: ' + n + N + 'Phone: ' + p + N + 'Country: ' + c + N + 'Amount: ' + a + ' ' + cur + N + 'Term: ' + t + N + 'Purpose: ' + u)
+    return H + '<div class=wrap><div class=card><h1>Thank you, ' + n + '!</h1><p>Request for <b>' + a + ' ' + cur + '</b> received.</p><p>We call you on <b>' + p + '</b></p><a class=btn href=' + W + '>WhatsApp</a><br><a class="btn btn2" href=/>Apply Another</a></div></div>'
+@app.route('/test-telegram')
+def test():
+    r = requests.post('https://api.telegram.org/bot' + B + '/sendMessage', json={'chat_id': C, 'text': 'Test OK'}, timeout=10)
+    return 'Status: ' + str(r.status_code)
+@app.route('/health')
+def health():
+    return 'OK'
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=10000)
