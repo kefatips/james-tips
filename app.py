@@ -105,7 +105,8 @@ def home():
     h = h + "document.getElementById('monthly').innerText="
     h = h + "sym+m.toFixed(2);"
     h = h + "document.getElementById('applyBtn').href="
-    h = h + "'/apply-form?amount='+amt+'&country='+c+'&term='+term;"
+    h = h + "'/apply-form?amount='+amt+"
+    h = h + "'&country='+c+'&term='+term;"
     h = h + "}updateAll();</script></body></html>"
     return h
 @app.route("/apply-form")
@@ -143,11 +144,4 @@ def apply():
     phone = request.form.get("phone", "").strip()
     email = request.form.get("email", "").strip()
     country = request.form.get("country", "").strip()
-    amount = request.form.get("amount", "").strip()
-    term = request.form.get("term", "").strip()
-    purpose = request.form.get("purpose", "").strip()
-    if not name or not phone or not country or not amount:
-        return "Fill all fields", 400
-    with open("leads.csv", "a", newline="") as f:
-        w = csv.writer(f)
-        w.writerow([datetime.now().isoformat(), name, phone, email
+    amount = request
