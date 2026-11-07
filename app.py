@@ -67,6 +67,7 @@ def home():
     h = h + "<option>Zimbabwe</option>"
     h = h + "<option>Zambia</option>"
     h = h + "<option>Tanzania</option>"
+    h = h + "<option>Ghana</option>"
     h = h + "</select>"
     h = h + "<p>Amount: <b id='amtLabel'>$5,000</b></p>"
     h = h + "<input type='range' id='amount'"
@@ -88,60 +89,4 @@ def home():
     h = h + "<p>We never ask for PIN or OTP.</p>"
     h = h + "</div>"
     h = h + "<script>function updateAll(){"
-    h = h + "var c=document.getElementById('country').value;"
-    h = h + "var sym='$';"
-    h = h + "if(c=='Zambia')sym='K';"
-    h = h + "if(c=='Tanzania')sym='TSh ';"
-    h = h + "var amt=document.getElementById('amount').value;"
-    h = h + "amt=parseInt(amt);"
-    h = h + "var term=document.getElementById('term').value;"
-    h = h + "term=parseInt(term);"
-    h = h + "document.getElementById('amtLabel').innerText="
-    h = h + "sym+amt.toLocaleString();"
-    h = h + "document.getElementById('termLabel').innerText="
-    h = h + "term+' months';"
-    h = h + "var r=0.08/12;"
-    h = h + "var m=amt*r/(1-Math.pow(1+r,-term));"
-    h = h + "document.getElementById('monthly').innerText="
-    h = h + "sym+m.toFixed(2);"
-    h = h + "document.getElementById('applyBtn').href="
-    h = h + "'/apply-form?amount='+amt+"
-    h = h + "'&country='+c+'&term='+term;"
-    h = h + "}updateAll();</script></body></html>"
-    return h
-@app.route("/apply-form")
-@app.route("/api/apply-form")
-def form():
-    h = "<h2>Apply Now</h2>"
-    h = h + "<form method='POST' action='/apply'>"
-    h = h + "<p>Name</p><input name='name' required>"
-    h = h + "<p>Phone</p><input name='phone' required>"
-    h = h + "<p>Email</p><input name='email'>"
-    h = h + "<p>Country</p><select name='country' required>"
-    h = h + "<option value=''>Select</option>"
-    h = h + "<option>Zambia</option>"
-    h = h + "<option>Zimbabwe</option>"
-    h = h + "<option>Tanzania</option></select>"
-    h = h + "<p>Amount</p><input name='amount' required>"
-    h = h + "<p>Term</p><input name='term' value='12'>"
-    h = h + "<p>Purpose</p><select name='purpose' required>"
-    h = h + "<option value=''>Select Purpose</option>"
-    h = h + "<option>Business</option>"
-    h = h + "<option>School Fees</option>"
-    h = h + "<option>Medical</option>"
-    h = h + "<option>Rent</option>"
-    h = h + "<option>Agriculture</option>"
-    h = h + "<option>Car</option>"
-    h = h + "<option>Personal</option>"
-    h = h + "<option>Other</option></select>"
-    h = h + "<p><button>SUBMIT</button></p></form>"
-    h = h + "<p><a href='" + WA + "'>WhatsApp</a></p>"
-    return h
-@app.route("/apply", methods=["POST"])
-@app.route("/api/apply", methods=["POST"])
-def apply():
-    name = request.form.get("name", "").strip()
-    phone = request.form.get("phone", "").strip()
-    email = request.form.get("email", "").strip()
-    country = request.form.get("country", "").strip()
-    amount = request
+    h = h + "var c=document.getElementById
